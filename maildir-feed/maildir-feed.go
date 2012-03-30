@@ -43,6 +43,7 @@ func worker(root, md *maildir.Maildir, url_ *url.URL, delay int) {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		cmd.Stdin = nil
+		cmd.Dir = md.Path
 		err := cmd.Run()
 
 		if err != nil {
