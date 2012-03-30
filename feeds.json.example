@@ -1,0 +1,10 @@
+{
+    "IT": {
+        "Slashdot": ["http://rss.slashdot.org/Slashdot/slashdotLinux", "http://rss.slashdot.org/Slashdot/slashdotHardware"],
+        "Ars Technica": "http://feeds.arstechnica.com/arstechnica/everything"
+    },
+    "Fun": {
+        "SMBC": "http://feeds.feedburner.com/smbc-comics/PvLb",
+        "XKCD": "http://xkcd.com/rss.xml"
+    }
+}
