@@ -66,10 +66,10 @@ func firstNonEmpty(s ...string) string {
 func getRFC822Date(e *feedparser.Entry) string {
 	emptyTime := time.Time{}
 	if e.PublicationDateParsed != emptyTime {
-		return e.PublicationDateParsed.Format(time.RFC822)
+		return e.PublicationDateParsed.Format(time.RFC1123Z)
 	}
 	if e.ModificationDateParsed != emptyTime {
-		return e.ModificationDateParsed.Format(time.RFC822)
+		return e.ModificationDateParsed.Format(time.RFC1123Z)
 	}
 	if e.PublicationDate != "" {
 		return e.PublicationDate
@@ -77,7 +77,7 @@ func getRFC822Date(e *feedparser.Entry) string {
 	if e.ModificationDate != "" {
 		return e.ModificationDate
 	}
-	return time.Now().UTC().Format(time.RFC822)
+	return time.Now().UTC().Format(time.RFC1123Z)
 }
 
 func getFrom(e *feedparser.Entry) string {
