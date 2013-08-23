@@ -33,9 +33,16 @@ func Abs(p string) string {
 }
 
 func worker(root, md *maildir.Maildir, url_ *url.URL, delay int) {
+	var execPath string
+
 	errCount := 0
 	dir, _ := path.Split(os.Args[0])
-	execPath := path.Join(Abs(dir), "maildir-feed-rss")
+	if dir == "" {
+		// maildir-feed in in $PTAH, assume that maildir-feed-rss is too
+		execPath = "maildir-feed-rss"
+	} else {
+		execPath = path.Join(Abs(dir), "maildir-feed-rss")
+	}
 
 	time.Sleep(time.Duration(int64(delay) * 1e9))
 	for {
