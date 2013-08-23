@@ -126,7 +126,7 @@ func process(rawUrl string) error {
 		msg.SetHeader("From", getFrom(&entry))
 		msg.SetHeader("To", "Feeds <feeds@localhost>")
 		msg.SetHeader("Subject", message.EncodeWord(title))
-		msg.SetHeader("Content-Type", "text/html")
+		msg.SetHeader("Content-Type", "text/html; charset=\"UTF-8\"")
 
 		_, err = md.CreateMail(msg)
 		if err != nil {
