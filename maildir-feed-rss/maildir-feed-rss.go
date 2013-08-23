@@ -84,6 +84,8 @@ func getFrom(e *feedparser.Entry) string {
 	name := strings.TrimSpace(message.EncodeWord(firstNonEmpty(e.Author.Name, e.Author.Uri, e.Author.Text)))
 	if e.Author.Email != "" {
 		name += " <" + strings.TrimSpace(e.Author.Email) + ">"
+	} else {
+		name += " <noreply@localhost>"
 	}
 	return name
 }
