@@ -148,7 +148,17 @@ func main() {
 	cache.path = path.Join(os.Getenv("HOME"), ".cache", "rss2maildir", strings.Replace(url_, "/", "_", -1))
 	cache.data = make(map[string]bool)
 
-	err := cache.load()
+	// Follow symlinks so we can share cache files across feed
+	cache_path_target, err := os.Readlink(cache.path)
+	if err == nil {
+		if cache_path_target[0] == byte('/') {
+			cache.path = cache_path_target
+		} else {
+			cache.path = path.Join(os.Getenv("HOME"), ".cache", "rss2maildir", cache_path_target)
+		}
+	}
+
+	err = cache.load()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Warning: can't read cache: %s\n", err.Error())
 	}
