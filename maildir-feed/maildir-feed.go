@@ -138,7 +138,16 @@ func main() {
 		return
 	}
 
-	md, err := maildir.New(path.Join(os.Getenv("HOME"), "Maildir-feeds"), true)
+	// Open maildir
+	var md_path string
+
+	if len(os.Args) > 1 {
+		md_path = Abs(os.Args[1])
+	} else {
+		md_path = path.Join(os.Getenv("HOME"), "Maildir-feeds")
+	}
+
+	md, err := maildir.New(md_path, true)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Can't open maildir: %s\n", err.Error())
 		return

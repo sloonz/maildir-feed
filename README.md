@@ -35,7 +35,11 @@ Then, create the configuration file:
     /path/to/executables/maildir-feed
 
 Daemon will not fork, you have to do it yourself or use a daemon manager
-like `stop-start-daemon`.
+like `stop-start-daemon`. By default, the maildir directory wil be assumed to
+be `$HOME/Maildir-feeds` ; you can change it by passing it as an argument to
+the command :
+
+    /path/to/executables/maildir-feed /path/to/maildir/folder
 
 # Configuration example
 
