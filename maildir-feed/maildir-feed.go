@@ -7,6 +7,7 @@ import (
 	"github.com/sloonz/go-maildir"
 	"github.com/sloonz/go-mime-message"
 	"github.com/sloonz/go-qprintable"
+	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"net/url"
 	"os"
@@ -87,18 +88,32 @@ func parseBox(root, md *maildir.Maildir, data map[string]interface{}, delay int)
 		}
 
 		switch v.(type) {
+		case map[interface{}]interface{}:
+			// yaml parser produces interface->interface maps
+			// try to convert to a string->interface map
+			newdata := make(map[string]interface{})
+			for n2, v2 := range v.(map[interface{}]interface{}) {
+				converted, ok := n2.(string)
+				if ok {
+					newdata[converted] = v2
+				} else {
+					fmt.Fprintf(os.Stderr, "%v: bad value type", n2);
+					os.Exit(1)
+				}
+			}
+			delay = parseBox(root, child, newdata, delay)
 		case map[string]interface{}:
 			delay = parseBox(root, child, v.(map[string]interface{}), delay)
 		case []interface{}:
 			for i, item := range v.([]interface{}) {
 				url_, ok := item.(string)
 				if !ok {
-					fmt.Fprintf(os.Stderr, "%s[%i]: bad value type", name, i)
+					fmt.Fprintf(os.Stderr, "%s[%d]: bad value type", name, i)
 					os.Exit(1)
 				}
 				parsedURL, err := url.Parse(url_)
 				if err != nil {
-					fmt.Fprintf(os.Stderr, "%s[%i]: bad url: %s", name, i, err)
+					fmt.Fprintf(os.Stderr, "%s[%d]: bad url: %s", name, i, err)
 					os.Exit(1)
 				}
 				go worker(root, child, parsedURL, delay)
@@ -122,18 +137,25 @@ func parseBox(root, md *maildir.Maildir, data map[string]interface{}, delay int)
 
 func main() {
 	// Read & parse config
-	configFile, err := os.Open(path.Join(os.Getenv("HOME"), ".config", "rss2maildir", "feeds.json"))
-	config := make(map[string]interface{})
+	unmarshal := yaml.Unmarshal
+	configDir := path.Join(os.Getenv("HOME"), ".config", "rss2maildir")
+	// prefer yaml over json
+	configFile, err := os.Open(path.Join(configDir, "feeds.yaml"))
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Can't open config\n")
-		return
+		configFile, err = os.Open(path.Join(configDir, "feeds.json"))
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Can't open config\n")
+			return
+		}
+		unmarshal = json.Unmarshal
 	}
+	config := make(map[string]interface{})
 	data, err := ioutil.ReadAll(configFile)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Can't read config\n")
 		return
 	}
-	if err = json.Unmarshal(data, &config); err != nil {
+	if err = unmarshal(data, &config); err != nil {
 		fmt.Fprintf(os.Stderr, "Parse error: %s\n", err.Error())
 		return
 	}
