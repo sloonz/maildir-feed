@@ -126,6 +126,7 @@ func process(rawUrl string) error {
 
 		title := strings.TrimSpace(entry.Title)
 		msg := message.NewTextMessage(qprintable.UnixTextEncoding, bytes.NewBufferString(body))
+		msg.EOL = "\n"
 		msg.SetHeader("Date", getRFC822Date(&entry))
 		msg.SetHeader("From", getFrom(&entry))
 		msg.SetHeader("To", "Feeds <feeds@localhost>")
