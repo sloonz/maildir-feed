@@ -2,7 +2,9 @@ package main
 
 import (
 	"bytes"
+	"crypto/sha1"
 	"encoding/json"
+	"encoding/hex"
 	"fmt"
 	"github.com/sloonz/cfeedparser"
 	"github.com/sloonz/go-maildir"
@@ -144,8 +146,17 @@ func process(rawUrl string) error {
 
 func main() {
 	url_ := os.Args[1]
+	var filename string
 
-	cache.path = path.Join(os.Getenv("HOME"), ".cache", "rss2maildir", strings.Replace(url_, "/", "_", -1))
+	// If url is too long, use its SHA-1 hex representation to
+	// overcome file system limitation on max file name length
+	if len(url_) > 255 {
+		sum := sha1.Sum([]byte(url_))
+		filename = hex.EncodeToString(sum[:])
+	} else {
+		filename = strings.Replace(url_, "/", "_", -1)
+	}
+	cache.path = path.Join(os.Getenv("HOME"), ".cache", "rss2maildir", filename)
 	cache.data = make(map[string]bool)
 
 	// Follow symlinks so we can share cache files across feed
