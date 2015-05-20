@@ -28,7 +28,10 @@ Then, create the configuration file:
 
     mkdir $HOME/.config/rss2maildir
 
-    vim $HOME/.config/rss2maildir/feeds.json
+    vim $HOME/.config/rss2maildir/feeds.yaml
+
+The config can also be a JSON file `feeds.json`. In case both files
+exist, the YAML config is preferred.
 
 # Usage
 
@@ -42,15 +45,11 @@ the command :
     /path/to/executables/maildir-feed /path/to/maildir/folder
 
 # Configuration example
-
-    {
-    "IT": {
-     "Slashdot": ["http://rss.slashdot.org/Slashdot/slashdotLinux",
-                  "http://rss.slashdot.org/Slashdot/slashdotHardware"],
-     "Ars Technica": "http://feeds.arstechnica.com/arstechnica/everything"
-    },
-    "Fun": {
-     "SMBC": "http://feeds.feedburner.com/smbc-comics/PvLb",
-     "XKCD": "http://xkcd.com/rss.xml"
-    }
-    }
+    IT:
+      Slashdot:
+      - http://rss.slashdot.org/Slashdot/slashdotLinux
+      - http://rss.slashdot.org/Slashdot/slashdotHardware
+      Ars Technica: http://feeds.arstechnica.com/arstechnica/everything
+    Fun:
+      SMBC: http://feeds.feedburner.com/smbc-comics/PvLb
+      XKCD: http://xkcd.com/rss.xml
