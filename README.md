@@ -1,3 +1,8 @@
+# **This project is unmaintained**
+
+Please look at [Universal Aggregator](https://github.com/sloonz/ua)
+for its successor.
+
 # Presentation
 
 `maildir-feed` is a daemon which fetchs RSS/Atom feeds and put them
